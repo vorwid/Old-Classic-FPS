@@ -12,6 +12,7 @@ public class Gun : MonoBehaviour
     public AudioClip ShotSound;
     public AudioClip ReloadSound;
     public AudioClip EmptyGunSound;
+    public GameObject BulletHole;
 
     public Text AmmoText;
 
@@ -37,10 +38,10 @@ public class Gun : MonoBehaviour
     {
         AmmoText.text = AmmoClipLeft + " / " + AmmoLeft;
 
-        if (Input.GetButtonDown("Fire1"))
+        if (Input.GetButtonDown("Fire1") && isReloading == false)
             isShot = true;
 
-        if (Input.GetKeyDown(KeyCode.R))
+        if (Input.GetKeyDown(KeyCode.R) && isReloading == false)
         {
             Reload();
         }
@@ -61,6 +62,7 @@ public class Gun : MonoBehaviour
             {
                 Debug.Log("Wszedlem w kolizje z " + hit.collider.gameObject.name);
                 hit.collider.gameObject.SendMessage("GunHit", GunDamage, SendMessageOptions.DontRequireReceiver);                 //zdalne wywolanie funkcji w tym obiekcie
+                Instantiate(BulletHole, hit.point, Quaternion.FromToRotation(Vector3.up, hit.normal)); 
             }
         }
         else if (isShot == true && AmmoClipLeft <= 0 && isReloading == false)
